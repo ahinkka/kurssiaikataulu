@@ -8,7 +8,7 @@ import bitsets
 
 def debug(*args, **kwargs):
     kwargs['file'] = sys.stderr
-    return print(*args, **kwargs)
+    return print('#', *args, **kwargs)
 
 # Basic data structures
 students = {}
@@ -34,6 +34,7 @@ for line in sys.stdin:
         students[student] = (course_count, courses)
 
 all_courses = frozenset(all_courses)
+Students = bitsets.bitset('Students', tuple(students.keys()))
 
 # Print out sanity check statistics
 debug(students_total, courses_total, students_per_course)
@@ -77,14 +78,14 @@ for student in students.keys():
 
 course_applicant_sets = {}
 for course, applicants in course_applicants.items():
-    course_applicant_sets[course] = bitsets.bitset('applicants',
-                                                   tuple(course_applicants[course]))
+    course_applicant_sets[course] = Students(course_applicants[course])
 
 courses_left = set(all_courses)
 current_spot = 1
 previous_spots = {}
 while len(courses_left) > 0:
-    # debug(current_spot)
+    if len(courses_left) % 100 == 0:
+        debug(u"{0}/{1}".format(len(courses_left), len(all_courses)))
 
     # Handle the first round differently as we don't have anything to compare to
     if current_spot not in previous_spots:
@@ -100,9 +101,10 @@ while len(courses_left) > 0:
         courses_left.remove(first_course)
         print(first_course, current_spot)
     else:
-        # Go through all courses to find out with best score. Score is the
-        # applicant set overlap of the courses subtracted from the applicant
-        # set size of the candidate course.
+        previous_on_the_spot = previous_spots[current_spot]
+        # Go through all courses left to find out with best score. Score is
+        # the applicant set overlap of the courses subtracted from the
+        # applicant set size of the candidate course.
         #
         # I.e. CANDIDATE-COURSE-APPLICANT-COUNT -
         #      SET-OVERLAP(CANDIDATE_COURSE-APPLICANTS,
@@ -110,7 +112,29 @@ while len(courses_left) > 0:
         #
         # Ideally this should be a score of all the previous courses on the
         # spot.
-        break
+        best_score = None
+        best_score_course = None
+
+        for course, applicant_count in applicant_counts:
+            if course not in courses_left:
+                continue
+            
+            if best_score is not None and applicant_count < best_score:
+                continue
+
+            set_overlap = \
+                course_applicant_sets[course].intersection(course_applicant_sets[previous_on_the_spot]).__len__()
+            score = applicant_count - set_overlap
+
+            if best_score is None or score > best_score:
+                best_score = score
+                best_score_course = course
+        assert best_score_course is not None
+
+        previous_spots[current_spot] = best_score_course
+        courses_left.remove(best_score_course)
+        print(best_score_course, current_spot)
+
 
     current_spot += 1
     if current_spot > 25:
