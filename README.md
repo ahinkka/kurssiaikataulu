@@ -1,1 +1,1 @@
-cat kurssit.txt | python3 kurssiaikataulu.py
+cat kurssit.txt | python kurssiaikataulu.py
