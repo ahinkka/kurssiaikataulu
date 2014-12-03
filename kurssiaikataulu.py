@@ -1,5 +1,6 @@
 import sys
-import defaultdict
+import collections
+import operator
 
 # Basic data structures
 students = {}
@@ -31,4 +32,20 @@ for student in students.keys():
     courses_sum += course_count
 print(float(courses_sum) / float(len(students)))
 
-    
+
+#
+# Course popularity; handle courses in popularity order    
+#
+course_applicant_count = collections.defaultdict(int)
+for student in students.keys():
+    course_count, courses = students[student]
+    for course in courses:
+        applicant_count = course_applicant_count[course]
+        applicant_count += 1
+        course_applicant_count[course] = applicant_count
+
+applicant_counts = sorted(list(course_applicant_count.items()), key=operator.itemgetter(1), reverse=True)
+
+for course, count in applicant_counts:
+    print(course, count)
+
