@@ -1,0 +1,103 @@
+<meta charset="utf-8">
+<title>Kurssiaikataulu</title>
+<h1>Kurssiaikataulu</h1>
+
+<p>Perinteinen tapa järjestää yliopiston opetus
+on julkaista kurssiaikataulu,
+minkä jälkeen opiskelijat ilmoittautuvat kursseille.
+Tässä on kuitenkin ongelmana,
+että opiskelijan haluamat kurssit voivat mennä päällekkäin.
+Tämän tehtävän aiheena on tutkia vaihtoehtoista ratkaisua:
+opiskelijat ilmoittautuvat ensin kursseille,
+ja vasta tämän jälkeen muodostetaan kurssiaikataulu.</p>
+
+<p>Yksinkertaisuuden vuoksi oletetaan,
+että viikossa on 25 mahdollista paikkaa kursseille
+ja jokainen kurssi vie yhden paikan.
+Samalle paikalle voi sijoittaa monta kurssia.
+Aikataulun pohja on seuraava:</p>
+
+<table border>
+<tr><th width=60>aika</th><th width=60>ma</th><th width=60>ti</th>
+<th width=60>ke</th><th width=60>to</th><th width=60>pe</th></tr>
+<tr><th>8&ndash;10</th><td>1</td><td>6</td><td>11</td><td>16</td><td>21</td></tr>
+<tr><th>10&ndash;12</th><td>2</td><td>7</td><td>12</td><td>17</td><td>22</td></tr>
+<tr><th>12&ndash;14</th><td>3</td><td>8</td><td>13</td><td>18</td><td>23</td></tr>
+<tr><th>14&ndash;16</th><td>4</td><td>9</td><td>14</td><td>19</td><td>24</td></tr>
+<tr><th>16&ndash;18</th><td>5</td><td>10</td><td>15</td><td>20</td><td>25</td></tr>
+</table>
+
+<h2>Syötetiedosto</h2>
+
+<p>Koodisi tulee käsitellä seuraava tiedosto:
+<a href="kurssit.txt">kurssit.txt</a></p>
+
+<p>Tiedoston ensimmäisellä rivillä on kolme kokonaislukua:
+opiskelijoiden lukumäärä, kurssien lukumäärä,
+sekä suurin määrä kursseja opiskelijalla.
+Opiskelijat ja kurssit on numeroitu kokonaisluvuin 1:stä alkaen.</p>
+
+<p>Tämän jälkeen tiedostossa on yksi rivi jokaista
+opiskelijaa kohden.
+Rivillä lukee ensin opiskelijan numero,
+sitten hänen valitsemiensa kurssien määrä
+ja sitten kunkin kurssin numero.</p>
+
+<h2>Tulostiedosto</h2>
+
+<p>Koodisi tulee tuottaa tiedosto,
+jossa kerrotaan,
+mihin paikkaan mikäkin kurssi sijoitetaan
+kurssiaikataulussa.</p>
+
+<p>Tiedostossa tulee olla jokaista kurssia kohden
+rivi, jossa lukee ensin kurssin numero ja
+tämän jälkeen kurssin paikka aikataulussa
+(kokonaisluku väliltä 1&ndash;25).</p>
+
+<p>Esimerkiksi tiedosto voisi alkaa seuraavasti:</p>
+
+<pre>
+1 8
+2 5
+3 19
+</pre>
+
+<p>Tämä tarkoittaisi, että kurssi 1 sijoitetaan paikkaan 8
+(ti 12&ndash;14), kurssi 2 paikkaan 5 (ma 16&ndash;18)
+ja kurssi 3 paikkaan 19 (to 14&ndash;16).</p>
+
+<h2>Pisteytys</h2>
+
+<p>Kurssiaikataulun pistemäärä lasketaan niin,
+että jokaisesta toteutuneesta opiskelijan
+kurssitoiveesta saa yhden pisteen.
+Jos opiskelija on valinnut monta kurssia,
+jotka järjestetään samaan aikaan,
+hän voi osallistua niistä vain yhdelle.</p>
+
+<h2>Ratkaisun lähetys</h2>
+
+<p>Ratkaisu täytyy lähettää viimeistään pe 5.12. klo 13:59.
+Ratkaisu (tulostiedosto) lähetetään nettisivun kautta,
+joka tarkistaa sen automaattisesti.
+Lähetä lisäksi nimesi, opiskelijanumerosi sekä
+käyttämäsi koodi osoitteeseen ahslaaks@cs.helsinki.fi.</p>
+
+<p>Voit lähettää ratkaisusi tehtävään  <a href="http://ahslaaks.users.cs.helsinki.fi/tira14/tark.php">tästä</a>.</p>
+
+<p>Voit katsoa tuloslistaa  <a href="http://ahslaaks.users.cs.helsinki.fi/tira14/lista.php">tästä</a>.</p>
+
+<p>Saat ratkaisusta seuraavasti kurssipisteitä:</p>
+
+<table border>
+<tr><th width=100>tulos</th><th width=100>pisteet</th></tr>
+<tr><td>0&ndash;449999</td><td>0</td></tr>
+<tr><td>450000&ndash;474999</td><td>1</td></tr>
+<tr><td>475000&ndash;479999</td><td>2</td></tr>
+<tr><td>480000&ndash;480999</td><td>3</td></tr>
+<tr><td>481000&ndash;481999</td><td>4</td></tr>
+<tr><td>482000&ndash;</td><td>5</td></tr>
+</table>
+<p>
+</p>
