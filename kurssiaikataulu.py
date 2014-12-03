@@ -1,6 +1,10 @@
+from __future__ import print_function
+
 import sys
 import collections
 import operator
+
+import bitsets
 
 def debug(*args, **kwargs):
     kwargs['file'] = sys.stderr
@@ -52,11 +56,23 @@ for student in students.keys():
 applicant_counts = sorted(list(course_applicant_count.items()),
                           key=operator.itemgetter(1), reverse=True)
 
-current_spot = 1
+# current_spot = 1
+# for course, count in applicant_counts:
+#     print(course, current_spot)
+#     current_spot += 1
+
+#     if current_spot > 25:
+#         current_spot = 1
+
+course_applicants = collections.defaultdict(list)
+for student in students.keys():
+    course_count, courses = students[student]
+    for course in courses:
+        course_applicants[course].append(student)
+
+course_applicant_sets = {}
+for course, applicants in course_applicants.items():
+    course_applicant_sets[course] = bitsets.bitset('applicants', tuple(course_applicants[course]))
+
 for course, count in applicant_counts:
-    print(course, current_spot)
-    current_spot += 1
-
-    if current_spot > 25:
-        current_spot = 1
-
+    print(course, course_applicant_sets[course])
