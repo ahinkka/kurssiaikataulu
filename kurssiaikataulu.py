@@ -2,6 +2,10 @@ import sys
 import collections
 import operator
 
+def debug(*args, **kwargs):
+    kwargs['file'] = sys.stderr
+    return print(*args, **kwargs)
+
 # Basic data structures
 students = {}
 students_total = None
@@ -23,18 +27,19 @@ for line in sys.stdin:
         students[student] = (course_count, courses)
 
 # Print out sanity check statistics
-print(students_total, courses_total, students_per_course)
-print(len(students))
+debug(students_total, courses_total, students_per_course)
+debug(len(students))
 
 courses_sum = 0
 for student in students.keys():
     course_count, _ = students[student]
     courses_sum += course_count
-print(float(courses_sum) / float(len(students)))
+debug(float(courses_sum) / float(len(students)))
 
 
 #
-# Course popularity; handle courses in popularity order    
+# Course popularity; handle courses in popularity order, assign in loop to
+# spots
 #
 course_applicant_count = collections.defaultdict(int)
 for student in students.keys():
@@ -44,8 +49,14 @@ for student in students.keys():
         applicant_count += 1
         course_applicant_count[course] = applicant_count
 
-applicant_counts = sorted(list(course_applicant_count.items()), key=operator.itemgetter(1), reverse=True)
+applicant_counts = sorted(list(course_applicant_count.items()),
+                          key=operator.itemgetter(1), reverse=True)
 
+current_spot = 1
 for course, count in applicant_counts:
-    print(course, count)
+    print(course, current_spot)
+    current_spot += 1
+
+    if current_spot > 25:
+        current_spot = 1
 
