@@ -80,16 +80,32 @@ while len(courses_left) > 0:
         debug(u"{0}/{1}".format(len(courses_left), len(all_courses)))
 
     heap = []
-    initial_course = initial_courses[current_spot - 1]
-    for course, applicant_count in applicant_counts:
-        if course not in courses_left:
-            continue
+    comparable_courses = [initial_courses[current_spot - 1]]
 
-        set_overlap = \
-            course_applicant_sets[initial_course].intersection(course_applicant_sets[course]).__len__()
-        heapq.heappush(heap, (1000 - set_overlap, course))
+    for comparable_course in comparable_courses:
+        best_overlap = None
+        best_overap_course = None
+        # considered = 0
+        for course, applicant_count in applicant_counts:
+            if course not in courses_left:
+                continue
 
-    best = heapq.heappop(heap)[1]
+            set_overlap = \
+                course_applicant_sets[comparable_course].intersection(course_applicant_sets[course]).__len__()
+
+            if best_overlap is None or set_overlap < best_overlap:
+                best_overlap = set_overlap
+                best_overlap_course = course
+
+            # considered += 1
+            # if considered > 1000:
+            #     break
+
+        # debug('initial_course', comparable_course, 'course', course, set_overlap)
+        heapq.heappush(heap, (1000 - best_overlap, best_overlap_course))
+
+    overlap, best = heapq.heappop(heap)
+    # debug('current_spot', current_spot, 'overlap', overlap)
     similar_courses[current_spot].append(best)
     courses_left.remove(best)
 
