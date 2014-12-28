@@ -1,5 +1,7 @@
 #!/usr/bin/env julia
 
+import DataStructures
+
 @assert length(ARGS) == 1 "Original course file required as the first argument to script"
 
 course_slots = Dict{Int,Int}()
@@ -12,7 +14,7 @@ end
 info("Slots read")
 
 score = 0
-slots_taken = Dict{Int,IntSet}()
+slots_taken = DataStructures.DefaultDict(Int, IntSet, ()->IntSet())
 f = open(ARGS[1])
 for (index, line) in enumerate(eachline(f))
     if index == 1
@@ -26,7 +28,6 @@ for (index, line) in enumerate(eachline(f))
     map(x->push!(courses, parseint(x)), parts[3:end])
     @assert length(courses) == parseint(parts[2])
 
-    if !haskey(slots_taken, student) slots_taken[student] = IntSet() end
     for course in courses
         course_slot = course_slots[course]
         if in(course_slot, slots_taken[student])

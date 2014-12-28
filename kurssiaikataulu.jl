@@ -4,6 +4,8 @@ import Base.Collections
 import Base.Order
 import Base.hash
 
+import DataStructures
+
 immutable Course
     name::Int
     participants::Set{Int}
@@ -60,10 +62,9 @@ function read_students(stream)
 end
 
 function to_courses(students)
-    course_applicants = Dict{Int, Vector{Int}}()
+    course_applicants = DataStructures.DefaultDict(Int, Vector{Int}, ()->[])
     for (student_name, student) in students
         for course_name in student.course_names
-            if ! haskey(course_applicants, course_name) course_applicants[course_name] = [] end
             push!(course_applicants[course_name], student_name)
         end
     end
@@ -133,7 +134,7 @@ function main()
     info("Preparations done")
 
     course_names_left = IntSet(keys(courses))
-    courses_on_spot = Dict{Int, Vector{Course}}()
+    courses_on_spot = DataStructures.DefaultDict(Int, Vector{Course}, ()->[])
     current_spot = 1
     last_speed_printout = time()
     while length(course_names_left) > 0
@@ -144,9 +145,7 @@ function main()
             last_speed_printout = now
         end
 
-        if ! haskey(courses_on_spot, current_spot) courses_on_spot[current_spot] = [] end
         other_courses = courses_on_spot[current_spot]
-
         best_course = best_course_for_spot(course_names_left, pop_ordered_courses, other_courses)
 
         push!(courses_on_spot[current_spot], best_course)
