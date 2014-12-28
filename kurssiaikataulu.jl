@@ -6,6 +6,7 @@ import Base.hash
 
 immutable Course
     name::Int
+    # participants::Set{Int}
     participants::IntSet
     size::Int
 end
@@ -16,8 +17,6 @@ immutable Student
 end
 
 hash(c::Course) = hash(c.name) + hash(c.participants) + hash(c.size)
-# isequal(a::Course, b::Course) =
-#     a.name == b.name && a.participants == b.participants && a.size == b.size
 
 function isequal(a::Course, b::Course)
     function sets_equal(c, d)
@@ -30,6 +29,8 @@ end
 ==(a::Course, b::Course) = isequal(a, b)
 
 function test()
+    # foo = Course(1449, Set([3430,23568,60771,91142]), 4)
+    # bar = Course(1449, Set([3430,23568,60771,91142]), 4)
     foo = Course(1449, IntSet([3430,23568,60771,91142]), 4)
     bar = Course(1449, IntSet([3430,23568,60771,91142]), 4)
     @assert isequal(foo, bar)
@@ -72,6 +73,7 @@ function to_courses(students)
 
     result = Dict{Int, Course}()
     for (course_name, student_names) in course_applicants
+        # students = Set{Int}()
         students = IntSet()
         for student_name in student_names
             push!(students, student_name)
@@ -95,7 +97,6 @@ function pop_order(courses)
     result
 end
 
-
 function quick_copy(s::IntSet)
     result = IntSet()
     result.bits = copy(s.bits)
@@ -110,10 +111,8 @@ function overlap_score(other_courses::Vector{Course}, course::Course)
     else
         result::Int = 0
         for other in other_courses
-            # a::IntSet = copy(course.participants)
-            a::IntSet = quick_copy(course.participants)
-            b::IntSet = other.participants
-            intersection = intersect!(a, b)
+            # intersection = intersect(course.participants, other.participants)
+            intersection = intersect!(quick_copy(course.participants), other.participants)
             overlap = length(intersection)
             score = other.size - overlap
             result += score
@@ -149,10 +148,13 @@ function main()
     course_names_left = IntSet(keys(courses))
     courses_on_spot = Dict{Int, Vector{Course}}()
     current_spot = 1
-    # loops = 0
+    last_speed_printout = time()
     while length(course_names_left) > 0
         if length(course_names_left) % 100 == 0
-            info("$(length(course_names_left))/$(length(courses))")
+            now = time()
+            secs = now - last_speed_printout
+            info("$(length(course_names_left))/$(length(courses)) [$(100 / secs) courses/s]")
+            last_speed_printout = now
         end
 
         if ! haskey(courses_on_spot, current_spot) courses_on_spot[current_spot] = [] end
@@ -168,19 +170,8 @@ function main()
         current_spot += 1
         if current_spot > 25
             current_spot = 1
-            # loops += 1
-
-            # if loops == 10
-            #     break
-            # end
         end
     end
 end
-
-# import Base.Profile
-# @profile main()
-# # Profile.print(cols=120)
-# Profile.print(format=:flat, cols=120)
-
 
 main()
