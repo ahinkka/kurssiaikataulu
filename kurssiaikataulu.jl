@@ -6,8 +6,7 @@ import Base.hash
 
 immutable Course
     name::Int
-    # participants::Set{Int}
-    participants::IntSet
+    participants::Set{Int}
     size::Int
 end
 
@@ -20,7 +19,7 @@ hash(c::Course) = hash(c.name) + hash(c.participants) + hash(c.size)
 
 function isequal(a::Course, b::Course)
     function sets_equal(c, d)
-        length(union(c, d)) == length(c) == length(d)
+        issubset(c, d) && issubset(d, c)
     end
 
     a.name == b.name && sets_equal(a.participants, b.participants) && a.size == b.size
@@ -29,10 +28,8 @@ end
 ==(a::Course, b::Course) = isequal(a, b)
 
 function test()
-    # foo = Course(1449, Set([3430,23568,60771,91142]), 4)
-    # bar = Course(1449, Set([3430,23568,60771,91142]), 4)
-    foo = Course(1449, IntSet([3430,23568,60771,91142]), 4)
-    bar = Course(1449, IntSet([3430,23568,60771,91142]), 4)
+    foo = Course(1449, Set([3430,23568,60771,91142]), 4)
+    bar = Course(1449, Set([3430,23568,60771,91142]), 4)
     @assert isequal(foo, bar)
     @assert foo == bar
     @assert hash(foo) == hash(bar)
@@ -73,8 +70,7 @@ function to_courses(students)
 
     result = Dict{Int, Course}()
     for (course_name, student_names) in course_applicants
-        # students = Set{Int}()
-        students = IntSet()
+        students = Set{Int}()
         for student_name in student_names
             push!(students, student_name)
         end
@@ -97,22 +93,13 @@ function pop_order(courses)
     result
 end
 
-function quick_copy(s::IntSet)
-    result = IntSet()
-    result.bits = copy(s.bits)
-    result.limit = copy(s.limit)
-    result.fill1s = s.fill1s
-    result
-end
-
 function overlap_score(other_courses::Vector{Course}, course::Course)
     if length(other_courses) == 0
         course.size
     else
         result::Int = 0
         for other in other_courses
-            # intersection = intersect(course.participants, other.participants)
-            intersection = intersect!(quick_copy(course.participants), other.participants)
+            intersection = intersect(course.participants, other.participants)
             overlap = length(intersection)
             score = other.size - overlap
             result += score
